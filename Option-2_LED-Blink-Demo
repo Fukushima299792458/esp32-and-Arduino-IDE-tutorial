@@ -6,17 +6,43 @@ void setup() {
   //This tells the esp32 to set the serial connection to a baud rate of 115200. This allows the esp32 to communicate with your computer, the outputs can be viewed by opening the serial monitor or by pressing ctrl+shift+m, then setting the baud rate in the top right-hand corner of the serial monitor to the same baud rate as the esp32 is set to in the following line.
   Serial.begin(115200);
 
+  // Each Serial.println(); adds a return element after the text so this line puts the next text on a new line. 
+  Serial.println();
+
   // This references the previously set variable and tells the board that pin 2 is an output and should be treated as such. 
   pinMode(RGB_red, OUTPUT);
 }
 
-// This function runs repeatedly on loop until the board is powered down so put the code you want to run continuosly here.
+// This function runs repeatedly on a loop until the board is powered down so put the code you want to run continuously here.
 void loop() {
-  //
+  // This checks if there are any inputs from the computer's serial monitor (as typed in the input field across the top of the serial monitor).
   if (Serial.available()) {
+    // If there is an input from the serial monitor it reads the input and prints it on a new line to the serial monitor.
     Serial.println(Serial.readString());
+    // This checks the content of the input to see if it matches the preset commands i.e. "1" (turn on), "0" (turn off), "show" (put on a simple show), or anything else (print on a new line "this is not a valid command!"). 
     if (Serial.readString() == "1") {
-      //
+      // Sets the referenced pin (pin 2) to the binary (on or off) "HIGH" which increases the voltage on the pin, in this case turning the LED on.
+      digitalWrite(RGB_red, HIGH);
+    } else if (Serial.readString() == "0") {
+      // Sets the referenced pin (pin 2) to the binary (on or off) "LOW" which decreases the voltage on the pin, in this case turning the LED off.
+      digitalWrite(RGB_red, LOW);
+    } else if (Serial.readString() == "show") {
+      // Sets the referenced pin (pin 2) to the analog ("any" number or any integer between 0 and 255) 0 which decreases how often the voltage is high on the pin to never, in this case turning the LED off.
+      analogWrite(RGB_red, 0);
+      // starts a for loop to repeat 255 times increasing i each time.
+      for (int i = 0; i < 255; i++) {
+        // Sets the referenced pin (pin 2) to the analog ("any" number or any integer between 0 and 255) integer variable i for each which decreases how often the voltage is high on the pin to never, in this case turning the LED off.
+        analogWrite(RGB_red, i);
+        delay(255 - i);
+      }
+      // starts a for loop to repeat 255 times decreasing i each time.
+      for (int i = 255; i > 0; i--) {
+        analogWrite(RGB_red, i);
+        delay(255 - i);
+      }
+    } else {
+      // Sets the referenced pin (pin 2) to "HIGH" which increases the voltage on the pin, in this case turning the LED on.
+      digitalWrite(RGB_red, HIGH);
     }
   }
   x += analogRead(Temp);
