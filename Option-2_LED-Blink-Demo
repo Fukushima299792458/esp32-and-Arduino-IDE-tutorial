@@ -1,5 +1,5 @@
-// This defines the variable "RGB_red" as 2, D2, or pin 2, and can be referenced later so you don't have to remember which pin the LED is attached to. This is also the pin number of the inbuilt LED. 
-#define RGB_red 2
+// This defines the variable "RGB_blue" as 2, D2, or pin 2, and can be referenced later so you don't have to remember which pin the LED is attached to. This is also the pin number of the inbuilt LED. 
+#define RGB_blue 2
 
 // Self-explanatory, this is the code you want to run when setting up before the first "frame" or "loop()" function runs.
 void setup() {
@@ -12,7 +12,7 @@ void setup() {
   Serial.println("ready");
 
   // This references the previously set variable and tells the board that pin 2 is an output and should be treated as such. 
-  pinMode(RGB_red, OUTPUT);
+  pinMode(RGB_blue, OUTPUT);
 }
 
 // This function runs repeatedly on a loop until the board is powered down so put the code you want to run continuously here.
@@ -28,17 +28,17 @@ void loop() {
     // This checks the content of the input to see if it matches the preset commands i.e. "1" (turn on), "0" (turn off), "show" (put on a simple show), or anything else (print on a new line "this is not a valid command!"). 
     if (input == "1") {
       // Sets the referenced pin (pin 2) to the binary (on or off) "HIGH" which increases the voltage on the pin, in this case turning the LED on.
-      digitalWrite(RGB_red, HIGH);
+      digitalWrite(RGB_blue, HIGH);
     } else if (input == "0") {
       // Sets the referenced pin (pin 2) to the binary (on or off) "LOW" which decreases the voltage on the pin, in this case turning the LED off.
-      digitalWrite(RGB_red, LOW);
+      digitalWrite(RGB_blue, LOW);
     } else if (input == "show") {
       // Sets the referenced pin (pin 2) to the analog ("any" number or any integer between 0 and 255) 0 which decreases how often the voltage is high on the pin to never, in this case turning the LED off.
-      analogWrite(RGB_red, 0);
+      analogWrite(RGB_blue, 0);
       // starts a for loop to repeat 255 times increasing i each time.
       for (int i = 0; i < 255; i++) {
         // Sets the referenced pin (pin 2) to the analog ("any" number or any integer between 0 and 255) integer variable i for each which increases how often the voltage is high on the pin.
-        analogWrite(RGB_red, i);
+        analogWrite(RGB_blue, i);
         // Make the code wait before executing the next step. Subtracting i each time means that more and more time occurs between each iteration/light-brightness-level leading to a logarithmic brightening pattern. 
         delay((255 - i) / 10);
         // Prints the brightness to the serial monitor to make sure the code is working. 
@@ -47,7 +47,7 @@ void loop() {
       // starts a for loop to repeat 255 times decreasing i each time.
       for (int i = 255; i > -1; i--) {
         // Sets the referenced pin (pin 2) to the analog ("any" number or any integer between 0 and 255) integer variable i for each which decreases how often the voltage is high on the pin.
-        analogWrite(RGB_red, i);
+        analogWrite(RGB_blue, i);
         // Make the code wait before executing the next step. Subtracting i each time means that less and less time occurs between each iteration/light-brightness-level leading to an exponetial decay pattern. 
         delay((255 - i) / 10);
         // Prints the brightness to the serial monitor to make sure the code is working. 
