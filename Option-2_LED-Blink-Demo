@@ -3,7 +3,7 @@
 
 // Self-explanatory, this is the code you want to run when setting up before the first "frame" or "loop()" function runs.
 void setup() {
-  //This tells the esp32 to set the serial connection to a baud rate of 115200. This allows the esp32 to communicate with your computer, the outputs can be viewed by opening the serial monitor or by pressing ctrl+shift+m, then setting the baud rate in the top right-hand corner of the serial monitor to the same baud rate as the esp32 is set to in the following line.
+  //This tells the esp32 to set the serial connection to a baud rate of 2000000. This allows the esp32 to communicate with your computer, the outputs can be viewed by opening the serial monitor or by pressing ctrl+shift+m, then setting the baud rate in the top right-hand corner of the serial monitor to the same baud rate as the esp32 is set to in the following line.
   Serial.begin(2000000);
 
   // Each Serial.println(); adds a return element after the text so this line puts the next text on a new line. 
