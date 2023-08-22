@@ -1,0 +1,47 @@
+// This defines the variable "RGB_blue" as 2, D2, or pin 2, and can be referenced later so you don't have to remember which pin the LED is attached to. This is also the pin number of the inbuilt LED. 
+#define RGB_blue 2
+// This defines the variable "Button" as 23, D23, or pin 23, and can be referenced later so you don't have to remember which pin the button is attached to. 
+#define Button 23
+
+// Boolean (true or false) variable to help with the logic and make sure the buttonpress function runs once per button press.
+
+// Saves the last state of the button (pressed or not).
+bool buttonPressed = false;
+// Saves the last state of the buttonPressed variable. 
+bool butttonJustPressed = false;
+
+// Self-explanatory, this is the code you want to run when setting up before the first "frame" or "loop()" function runs.
+void setup() {
+  // This tells the esp32 to set the serial connection to a baud rate of 2000000. This allows the esp32 to communicate with your computer, the outputs can be viewed by opening the serial monitor or by pressing ctrl+shift+m, then setting the baud rate in the top right-hand corner of the serial monitor to the same baud rate as the esp32 is set to in the following line.
+  Serial.begin(2000000);
+  // Stall in a loop until serial port is ready. 
+  while(!Serial) {
+    ;
+  }
+  // Each Serial.println(); adds a return element after the text so this line puts the next text on a new line. 
+  Serial.println();
+  // Declares that the esp32 is ready. 
+  Serial.println("ready");
+
+  // This references the previously set variable and tells the board that pin 2 is an output and should be treated as such. 
+  pinMode(RGB_blue, OUTPUT);
+  // This references the previously set variable and tells the board that pin 23 is an input and should be treated as such. 
+  pinMode(Button, INPUT_PULLUP);
+}
+
+// This function runs repeatedly on a loop until the board is powered down so put the code you want to run continuously here.
+void loop() {
+  // Makes sure the code only runs once per button press. It checks if the current button state is the true as and that last time it was false i.e. if the button is pressed now and the button wasn't pressed last time the button must have just been pressed if it has just been pressed then the code has already run so it doesn't need to run again.
+  if (!digitalRead(Button) && !butttonJustPressed) {
+    // Announces that the button has been pressed to the serial monitor to make sure the code is working. 
+    Serial.println("Button press detected.");
+    // Turns on the inbuilt LED (see option 2 for more details on how this works).
+    digitalWrite(RGB_blue, HIGH);
+  // Checks if the button is not currently pressed and the LED needs to be turned off ready for the next button press. 
+  } else if (digitalRead(Button)) {
+    // Turns off the inbuilt LED (see option 2 for more details on how this works).
+    digitalWrite(RGB_blue, LOW);
+  }
+  // Remembers what the last state of the button was i.e. if the code has run once already.
+  butttonJustPressed = !digitalRead(Button);
+}
