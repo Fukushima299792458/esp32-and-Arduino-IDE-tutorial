@@ -1,4 +1,4 @@
-// This defines the variable "RGB_red" as 2, D2, or pin 2, and can be referenced later so you don't have to remember which pin the LED is attached to.
+// This defines the variable "RGB_red" as 2, D2, or pin 2, and can be referenced later so you don't have to remember which pin the LED is attached to. This is also the pin number of the inbuilt LED. 
 #define RGB_red 2
 
 // Self-explanatory, this is the code you want to run when setting up before the first "frame" or "loop()" function runs.
