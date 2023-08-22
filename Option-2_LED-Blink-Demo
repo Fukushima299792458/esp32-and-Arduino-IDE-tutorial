@@ -41,20 +41,8 @@ void loop() {
         delay(255 - i);
       }
     } else {
-      // Sets the referenced pin (pin 2) to "HIGH" which increases the voltage on the pin, in this case turning the LED on.
-      digitalWrite(RGB_red, HIGH);
+      // If the input isn't a valid command this is printed to the serial manager.
+      Serial.println("this is not a valid command!");
     }
-  }
-  x += analogRead(Temp);
-  i += 1;
-  if (i >= 10000) {
-    if (x / 10000 < 1200) {
-      analogWrite(RGB_red, 255);
-    } else {
-      analogWrite(RGB_red, 10);
-    }
-    // Serial.println(x/10000);
-    i = 0;
-    x = 0;
   }
 }
