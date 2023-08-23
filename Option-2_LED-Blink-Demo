@@ -1,9 +1,9 @@
-// This defines the variable "RGB_blue" as 2, D2, or pin 2, and can be referenced later so you don't have to remember which pin the LED is attached to. This is also the pin number of the inbuilt LED. 
-#define RGB_blue 2
+// This defines the variable "inbuiltLED" as 2, D2, or pin 2, and can be referenced later so you don't have to remember which pin the LED is attached to. This is also the pin number of the inbuilt LED. 
+#define inbuiltLED 2
 
 // Self-explanatory, this is the code you want to run when setting up before the first "frame" or "loop()" function runs.
 void setup() {
-  //This tells the esp32 to set the serial connection to a baud rate of 2000000. This allows the esp32 to communicate with your computer, the outputs can be viewed by opening the serial monitor or by pressing ctrl+shift+m, then setting the baud rate in the top right-hand corner of the serial monitor to the same baud rate as the esp32 is set to in the following line.
+  //This tells the esp32 to set the serial connection to a baud rate of 115200. This allows the esp32 to communicate with your computer, the outputs can be viewed by opening the serial monitor or by pressing ctrl+shift+m, then setting the baud rate in the top right-hand corner of the serial monitor to the same baud rate as the esp32 is set to in the following line.
   Serial.begin(2000000);
   // Stall in a loop until serial port is ready. 
   while(!Serial) {}
@@ -13,27 +13,35 @@ void setup() {
   Serial.println("ready");
 
   // This references the previously set variable and tells the board that pin 2 is an output and should be treated as such. 
-  pinMode(RGB_blue, OUTPUT);
+  pinMode(inbuiltLED, OUTPUT);
 }
 
 // This function runs repeatedly on a loop until the board is powered down so put the code you want to run continuously here.
 void loop() {
   // This checks if there are any inputs from the computer's serial monitor (as typed in the input field across the top of the serial monitor).
   if (Serial.available()) {
-    // Saves the input to a variable to remember later. 
-    String input = Serial.readString();
-    // Removes any \r \n whitespace at the end of the String i.e. characters that don't display but are added to the string and would disrupt the following if-else statement. 
-    input.trim();
-    // If there is an input from the serial monitor it reads the input and prints it on a new line to the serial monitor.
-    Serial.println(input);
-    // This checks the content of the input to see if it matches the preset commands i.e. "1" (turn on), "0" (turn off), "show" (put on a simple show), or anything else (print on a new line "this is not a valid command!"). 
-    if (input == "1") {
+    // Runs checkInput function for serial monitor to check the input and respond accordingly. 
+    checkInput();
+  }
+}
+
+void checkInput() {
+  // This checks the content of the input to see if it matches any part of the preset commands array i.e. "1" (turn on), "0" (turn off), "show" (put on a simple show), or anything else (print on a new line "this is not a valid command!").
+  switch (whatInput()) {
+    case 0: // "help"
+      // Cycles through all of the commands in the command array, gives a description, and prints it to the serial manager. 
+      for (int i = 0; i < sizeof(commands) / sizeof(String); i++) {
+        Serial.println("\"" + commands[i] + "\" - command " + String(i) + " - " + commandDescriptions[i]);
+      }
+    case 1: case 2: // "1" or "on"
       // Sets the referenced pin (pin 2) to the binary (on or off) "HIGH" which increases the voltage on the pin, in this case turning the LED on.
       digitalWrite(RGB_blue, HIGH);
-    } else if (input == "0") {
+      break;
+    case 3: case 4: // "0" or "off"
       // Sets the referenced pin (pin 2) to the binary (on or off) "LOW" which decreases the voltage on the pin, in this case turning the LED off.
       digitalWrite(RGB_blue, LOW);
-    } else if (input == "show") {
+      break;
+    case 5: // "show"
       // Sets the referenced pin (pin 2) to the analog ("any" number or any integer between 0 and 255) 0 which decreases how often the voltage is high on the pin to never, in this case turning the LED off.
       analogWrite(RGB_blue, 0);
       // starts a for loop to repeat 255 times increasing i each time.
@@ -49,14 +57,66 @@ void loop() {
       for (int i = 255; i > -1; i--) {
         // Sets the referenced pin (pin 2) to the analog ("any" number or any integer between 0 and 255) integer variable i for each which decreases how often the voltage is high on the pin.
         analogWrite(RGB_blue, i);
-        // Make the code wait before executing the next step. Subtracting i each time means that less and less time occurs between each iteration/light-brightness-level leading to an exponetial decay pattern. 
+        // Make the code wait before executing the next step. Subtracting i each time means that less and less time occurs between each iteration/light-brightness-level leading to an exponential decay pattern. 
         delay((255 - i) / 10);
         // Prints the brightness to the serial monitor to make sure the code is working. 
         Serial.println(i);
       }
-    } else {
+      break;
+    default: // No valid command. 
       // If the input isn't a valid command this is printed to the serial manager.
       Serial.println("this is not a valid command!");
+    break;
+  }
+
+}
+
+// Checks the command index of the input. 
+int whatInput() {
+  // Saves the input to a variable to remember later. 
+  String input = Serial.readString();
+  // Removes any \r \n whitespace at the end of the String i.e. characters that don't display but are added to the string and would disrupt the following if-else statement. 
+  input.trim();
+  // Makes the string all lowercase to make checking commands easier. 
+  input = lower_string(input);
+  // If there is an input from the serial monitor it reads the input and prints it on a new line to the serial monitor.
+  Serial.println(input);
+  // Checks if the input is equal to any of the commands and returns their index.
+  for (int i = 0; i < sizeof(commands) / sizeof(String); i++) {
+    if (input == commands[i]) {
+      return i;
     }
   }
+  // If the input is not a valid command it returns -1 as this is an invalid index that won't be used by a real command. 
+  return -1;
+}
+
+// Take a string and make it lowercase.
+String lower_string(String str)
+{
+  // Cycle through every letter in the string. 
+	for(int i = 0; i < str.length(); i++)
+	{
+    // If the letter is uppercase make it lowercase. 
+		if (str[i] >= 'A' && str[i] <= 'Z') {
+			str[i] = str[i] + 32;
+    }
+	}
+  // Return the new lowercase string. 
+  return str;
+}
+
+// Take a string and make it uppercase.
+String upper_string(String str)
+{
+  // Cycle through every letter in the string. 
+	for(int i = 0; i < str.length(); i++)
+	{
+    // If the letter is lowercase make it uppercase. 
+		if (str[i] >= 'a' && str[i] <= 'z') {
+			str[i] = str[i] - 32;
+    }
+	}
+  // Return the new uppercase string. 
+  return str;
 }
