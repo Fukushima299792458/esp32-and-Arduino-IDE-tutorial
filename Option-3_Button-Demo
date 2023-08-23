@@ -1,5 +1,5 @@
-// This defines the variable "RGB_blue" as 2, D2, or pin 2, and can be referenced later so you don't have to remember which pin the LED is attached to. This is also the pin number of the inbuilt LED. 
-#define RGB_blue 2
+// This defines the variable "inbuiltLED" as 2, D2, or pin 2, and can be referenced later so you don't have to remember which pin the LED is attached to. This is also the pin number of the inbuilt LED. 
+#define inbuiltLED 2
 // This defines the variable "Button" as 23, D23, or pin 23, and can be referenced later so you don't have to remember which pin the button is attached to. 
 #define Button 23
 
@@ -19,7 +19,7 @@ void setup() {
   Serial.println("ready");
 
   // This references the previously set variable and tells the board that pin 2 is an output and should be treated as such. 
-  pinMode(RGB_blue, OUTPUT);
+  pinMode(inbuiltLED, OUTPUT);
   // This references the previously set variable and tells the board that pin 23 is an input and should be treated as such. 
   pinMode(Button, INPUT_PULLUP);
 }
@@ -31,11 +31,11 @@ void loop() {
     // Announces that the button has been pressed to the serial monitor to make sure the code is working. 
     Serial.println("Button press detected.");
     // Turns on the inbuilt LED (see option 2 for more details on how this works).
-    digitalWrite(RGB_blue, HIGH);
+    digitalWrite(inbuiltLED, HIGH);
   // Checks if the button is not currently pressed and the LED needs to be turned off ready for the next button press. It also only does this once to allow demonstration of other parts of the code interacting with the same LED. 
   } else if (digitalRead(Button) && !butttonNotJustPressed) {
     // Turns off the inbuilt LED (see option 2 for more details on how this works).
-    digitalWrite(RGB_blue, LOW);
+    digitalWrite(inbuiltLED, LOW);
   }
   // Remembers what the last state of the button was i.e. if the code has run once already.
   butttonNotJustPressed = digitalRead(Button);
