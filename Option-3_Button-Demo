@@ -3,12 +3,9 @@
 // This defines the variable "Button" as 23, D23, or pin 23, and can be referenced later so you don't have to remember which pin the button is attached to. 
 #define Button 23
 
-// Boolean (true or false) variable to help with the logic and make sure the buttonpress function runs once per button press.
 
-// Saves the last state of the button (pressed or not).
-bool buttonPressed = false;
-// Saves the last state of the buttonPressed variable. 
-bool butttonJustPressed = false;
+// Saves the last state of the button. Boolean (true or false) variable to help with the logic and make sure the buttonpress function runs once per button press.
+bool butttonNotJustPressed = false;
 
 // Self-explanatory, this is the code you want to run when setting up before the first "frame" or "loop()" function runs.
 void setup() {
@@ -29,17 +26,17 @@ void setup() {
 
 // This function runs repeatedly on a loop until the board is powered down so put the code you want to run continuously here.
 void loop() {
-  // Makes sure the code only runs once per button press. It checks if the current button state is the true as and that last time it was false i.e. if the button is pressed now and the button wasn't pressed last time the button must have just been pressed if it has just been pressed then the code has already run so it doesn't need to run again.
-  if (!digitalRead(Button) && !butttonJustPressed) {
+  // Makes sure the code only runs once per button press. It checks if the current button state is true and that last time it was false i.e. if the button is pressed now and the button wasn't pressed last time the button must have just been pressed if it has just been pressed then the code has already run so it doesn't need to run again.
+  if (!digitalRead(Button) && butttonNotJustPressed) {
     // Announces that the button has been pressed to the serial monitor to make sure the code is working. 
     Serial.println("Button press detected.");
     // Turns on the inbuilt LED (see option 2 for more details on how this works).
     digitalWrite(RGB_blue, HIGH);
-  // Checks if the button is not currently pressed and the LED needs to be turned off ready for the next button press. 
-  } else if (digitalRead(Button)) {
+  // Checks if the button is not currently pressed and the LED needs to be turned off ready for the next button press. It also only does this once to allow demonstration of other parts of the code interacting with the same LED. 
+  } else if (digitalRead(Button) && !butttonNotJustPressed) {
     // Turns off the inbuilt LED (see option 2 for more details on how this works).
     digitalWrite(RGB_blue, LOW);
   }
   // Remembers what the last state of the button was i.e. if the code has run once already.
-  butttonJustPressed = !digitalRead(Button);
+  butttonNotJustPressed = digitalRead(Button);
 }
