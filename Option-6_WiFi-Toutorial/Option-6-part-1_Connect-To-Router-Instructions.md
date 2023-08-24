@@ -5,3 +5,4 @@
   <li href="#">Copy the code from HERE into the Arduino IDE. </li>
   <li>Then read through the comments and extended breakdown [HERE](Option-6_WiFi-Toutorial/Option-6-part-1_Connect-To-Router-Demo).</li>
 </ol>
+[HERE](Option-6_WiFi-Toutorial/Option-6-part-1_Connect-To-Router-Demo).
