@@ -1,1 +1,55 @@
+// Include the WiFi library for WiFi functionality. 
+#include <WiFi.h>
 
+// Set network name.
+const char* ssid = "NetworkName";
+// Set network password. 
+const char* password = "NetworkPassword";
+
+
+// Self-explanatory, this is the code you want to run when setting up before the first "frame" or "loop()" function runs.
+void setup() {
+  // This tells the esp32 to set the serial connection to a baud rate of 2000000. This allows the esp32 to communicate with your computer, the outputs can be viewed by opening the serial monitor or by pressing ctrl+shift+m, then setting the baud rate in the top right-hand corner of the serial monitor to the same baud rate as the esp32 is set to in the following line.
+  Serial.begin(2000000);
+  // Stall in a loop until serial port is ready. 
+  while(!Serial) {}
+  // Each Serial.println(); adds a return element after the text so this line puts the next text on a new line. 
+  Serial.println();
+  // Declares that the esp32 is ready. 
+  Serial.println("ready");
+  
+  // Set the WiFi mode to station mode i.e. allows it to connect to and access point/router. 
+  WiFi.mode(WIFI_STA);
+  // Attempt to join the network. 
+  WiFi.begin(ssid, password);
+  // Announce connection status. 
+  Serial.print("Connecting to WiFi..");
+  // Keep track of how long it has been checking the WiFi network for. 
+  int timeout_counter = 0;
+  // Repeat until connected to WiFi. 
+  while (WiFi.status() != WL_CONNECTED) {
+    // Add some delay so the processor isn't overloaded. 
+    delay(100);
+    if (timeout_counter >= 60){ 
+      // Print a dot every second to confirm the esp is checking for the network.  
+      Serial.print(".");
+    }
+    // If the network cannot be found then restart the esp. 
+    if (timeout_counter >= 600){ 
+      ESP.restart();
+    }
+    // Increase how long the esp has been checking for the network. 
+    timeout_counter++;
+  }
+
+  // Each Serial.println(); adds a return element after the text so this line puts the next text on a new line. 
+  Serial.println();
+
+  // Announce connection status. 
+  Serial.println("WiFi connected.");
+}
+
+// This function runs repeatedly on a loop until the board is powered down so put the code you want to run continuously here.
+void loop() {
+  // Do nothing, just for demonstration purposes. 
+}
