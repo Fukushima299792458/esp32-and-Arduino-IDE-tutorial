@@ -1,1 +1,205 @@
+// An array that stores valid commands and makes them easier to handle numerically. 
+const String commands[13] = { "help", "1", "on", "0", "off", "show", "light", "brightness", "temp", "temperature", "potent", "potentiometer", "stop" };
+// A description of each command as accessible from the "help" command. 
+const String commandDescriptions[sizeof(commands) / sizeof(String)] = { "Display a list of commands. ", "Turn on the inbuilt LED. ", "Turn on the inbuilt LED. ", "Turn off the inbuilt LED. ", "Turn off the inbuilt LED. ", "Initiate preprogrammed light show. ", "Display the brightness index from the light sensor. ", "Display the brightness index from the light sensor. ", "Display the temperature score or index from the temperature sensor (May not always be plugged in due to the inconvenient location of the pin). ", "Display the temperature score or index from the temperature sensor (May not always be plugged in due to the inconvenient location of the pin). ", "Display the potentiometer state from the potentiometer input. ", "Display the potentiometer state from the potentiometer input. ", "Stop regularly displaying the average sensor input. " };
 
+
+// This defines the variable "inbuiltLED" as 2, D2, or pin 2, and can be referenced later so you don't have to remember which pin the LED is attached to. This is also the pin number of the inbuilt LED. 
+#define inbuiltLED 2
+// This defines the variable "Light" as 4, D4, or pin 4, and can be referenced later so you don't have to remember which pin the light sensor is attached to. 
+#define Light 4
+// This defines the variable "Temp" as 13, D13, or pin 13, and can be referenced later so you don't have to remember which pin the temperature sensor is attached to. 
+#define Temp 13
+// This defines the variable "Potentiometer" as 15, D15, or pin 15, and can be referenced later so you don't have to remember which pin the potentiometer is attached to. 
+#define Potentiometer 15
+// This defines the variable "Button" as 23, D23, or pin 23, and can be referenced later so you don't have to remember which pin the button is attached to. 
+#define Button 23
+
+// Keeps track of the total analog input over 10000 times the loop function runs to display an average. 
+int total;
+// Keeps track of how many times the loop function has looped so it knows when to calculate and display the average before it resets. 
+int i;
+// Sets the default analog input to the potentiometer for improved immediate interactivity and testing. 
+int sensor = Potentiometer;
+// Sets what will display before the default sensor measurement. 
+String sensorMeasures = "Potentiometer: ";
+
+// Self-explanatory, this is the code you want to run when setting up before the first "frame" or "loop()" function runs.
+void setup() {
+  // This tells the esp32 to set the serial connection to a baud rate of 2000000. This allows the esp32 to communicate with your computer, the outputs can be viewed by opening the serial monitor or by pressing ctrl+shift+m, then setting the baud rate in the top right-hand corner of the serial monitor to the same baud rate as the esp32 is set to in the following line.
+  Serial.begin(2000000);
+  // Stall in a loop until serial port is ready. 
+  while(!Serial) {}
+  // Each Serial.println(); adds a return element after the text so this line puts the next text on a new line. 
+  Serial.println();
+  // Declares that the esp32 is ready. 
+  Serial.println("ready");
+
+  // This references the previously set variable and tells the board that pin 2 is an output and should be treated as such. 
+  pinMode(inbuiltLED, OUTPUT);
+  // This references the previously set variable and tells the board that pin 4 is an input and should be treated as such. 
+  pinMode(Light, INPUT_PULLUP);
+  // This references the previously set variable and tells the board that pin 13 is an input and should be treated as such. 
+  pinMode(Temp, INPUT_PULLUP);
+  // This references the previously set variable and tells the board that pin 15 is an input and should be treated as such. 
+  pinMode(Potentiometer, INPUT_PULLUP);
+  // This references the previously set variable and tells the board that pin 23 is an input and should be treated as such. 
+  pinMode(Button, INPUT_PULLUP);
+}
+
+// This function runs repeatedly on a loop until the board is powered down so put the code you want to run continuously here.
+void loop() {
+  // This checks if there are any inputs from the computer's serial monitor (as typed in the input field across the top of the serial monitor).
+  if (Serial.available()) {
+    // Runs checkInput function for serial monitor to check the input and respond accordingly. 
+    checkInput();
+  }
+  // Check if the sensor is active or has been deactivated by the "stop" command. 
+  if (sensor) {
+    // Adds the current sensor reading to the total to get an average.
+    total += analogRead(sensor);
+    // Checks if it has l0000 times.
+    if (i >= 10000) {
+      // Changes the state of the inbuilt LED based on the average analog input. 
+      if (total / i < 1200) {
+        analogWrite(inbuiltLED, 255);
+      } else {
+        analogWrite(inbuiltLED, 10);
+      }
+      // Prints the average to the serial monitor.
+      Serial.println(sensorMeasures + total / 10000);
+      // Resets the total and the number of repeats to calculate the new average.
+      i = 0;
+      total = 0;
+    }
+    // increases i by one to keep track of how many repeats have happened. 
+    i += 1;
+  }
+}
+
+void checkInput() {
+  // This checks the content of the input to see if it matches any part of the preset commands array i.e. "1" (turn on), "0" (turn off), "show" (put on a simple show), or anything else (print on a new line "this is not a valid command!").
+  switch (whatInput()) {
+    case 0: // "help"
+      // Cycles through all of the commands in the command array, gives a description, and prints it to the serial manager. 
+      for (int i = 0; i < sizeof(commands) / sizeof(String); i++) {
+        Serial.println("\"" + commands[i] + "\" - command " + String(i) + " - " + commandDescriptions[i]);
+      }
+    case 1: case 2: // "1" or "on"
+      // Sets the referenced pin (pin 2) to the binary (on or off) "HIGH" which increases the voltage on the pin, in this case turning the LED on.
+      digitalWrite(inbuiltLED, HIGH);
+      break;
+    case 3: case 4: // "0" or "off"
+      // Sets the referenced pin (pin 2) to the binary (on or off) "LOW" which decreases the voltage on the pin, in this case turning the LED off.
+      digitalWrite(inbuiltLED, LOW);
+      break;
+    case 5: // "show"
+      // Sets the referenced pin (pin 2) to the analog ("any" number or any integer between 0 and 255) 0 which decreases how often the voltage is high on the pin to never, in this case turning the LED off.
+      analogWrite(inbuiltLED, 0);
+      // starts a for loop to repeat 255 times increasing i each time.
+      for (int i = 0; i < 255; i++) {
+        // Sets the referenced pin (pin 2) to the analog ("any" number or any integer between 0 and 255) integer variable i for each which increases how often the voltage is high on the pin.
+        analogWrite(inbuiltLED, i);
+        // Make the code wait before executing the next step. Subtracting i each time means that more and more time occurs between each iteration/light-brightness-level leading to a logarithmic brightening pattern. 
+        delay((255 - i) / 10);
+        // Prints the brightness to the serial monitor to make sure the code is working. 
+        Serial.println(i);
+      }
+      // starts a for loop to repeat 255 times decreasing i each time.
+      for (int i = 255; i > -1; i--) {
+        // Sets the referenced pin (pin 2) to the analog ("any" number or any integer between 0 and 255) integer variable i for each which decreases how often the voltage is high on the pin.
+        analogWrite(inbuiltLED, i);
+        // Make the code wait before executing the next step. Subtracting i each time means that less and less time occurs between each iteration/light-brightness-level leading to an exponetial decay pattern. 
+        delay((255 - i) / 10);
+        // Prints the brightness to the serial monitor to make sure the code is working. 
+        Serial.println(i);
+      }
+      break;
+    case 6: case 7: // "light" or "brightness"
+      // Resets the total and the number of repeats so the average doesn't include the value of the last sensor. 
+      total = 0;
+      i = 0;
+      // Changes which sensor is used. 
+      sensor = Light;
+      // Changes what displays before the average reading.
+      sensorMeasures = "Brightness: ";
+      break;
+    case 8: case 9: // "temp" or "temperature"
+      // Resets the total and the number of repeats so the average doesn't include the value of the last sensor. 
+      total = 0;
+      i = 0;
+      // Changes which sensor is used. 
+      sensor = Temp;
+      // Changes what displays before the average reading.
+      sensorMeasures = "Temperature: ";
+      break;
+    case 10: case 11: // "potent" or "potentiometer"
+      // Resets the total and the number of repeats so the average doesn't include the value of the last sensor. 
+      total = 0;
+      i = 0;
+      // Changes which sensor is used. 
+      sensor = Potentiometer;
+      // Changes what displays before the average reading.
+      sensorMeasures = "Potentiometer: ";
+      break;
+    case 12: // "stop"
+      // Sets the sensor value to 0 so when the sensor variable is checked the analog sensor code won't run. 
+      sensor = 0;
+      break;
+    default: // No valid command. 
+      // If the input isn't a valid command this is printed to the serial manager.
+      Serial.println("this is not a valid command!");
+    break;
+  }
+
+}
+
+// Checks the command index of the input. 
+int whatInput() {
+  // Saves the input to a variable to remember later. 
+  String input = Serial.readString();
+  // Removes any \r \n whitespace at the end of the String i.e. characters that don't display but are added to the string and would disrupt the following if-else statement. 
+  input.trim();
+  // Makes the string all lowercase to make checking commands easier. 
+  input = lower_string(input);
+  // If there is an input from the serial monitor it reads the input and prints it on a new line to the serial monitor.
+  Serial.println(input);
+  // Checks if the input is equal to any of the commands and returns their index.
+  for (int i = 0; i < sizeof(commands) / sizeof(String); i++) {
+    if (input == commands[i]) {
+      return i;
+    }
+  }
+  // If the input is not a valid command it returns -1 as this is an invalid index that won't be used by a real command. 
+  return -1;
+}
+
+// Take a string and make it lowercase.
+String lower_string(String str)
+{
+  // Cycle through every letter in the string. 
+	for(int i = 0; i < str.length(); i++)
+	{
+    // If letter is uppercase make it lowercase. 
+		if (str[i] >= 'A' && str[i] <= 'Z') {
+			str[i] = str[i] + 32;
+    }
+	}
+  // Return the new lowercase string. 
+  return str;
+}
+
+// Take a string and make it uppercase.
+String upper_string(String str)
+{
+  // Cycle through every letter in the string. 
+	for(int i = 0; i < str.length(); i++)
+	{
+    // If letter is lowercase make it uppercase. 
+		if (str[i] >= 'a' && str[i] <= 'z') {
+			str[i] = str[i] - 32;
+    }
+	}
+  // Return the new uppercase string. 
+  return str;
+}
