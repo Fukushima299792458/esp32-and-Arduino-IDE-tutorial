@@ -1,6 +1,7 @@
 # Things-and-stuff
 
-add descriptions for extra marks, if you are reading this as a marker, please remind me to do it and clear it
+ if you are reading this as a marker, please remind me to do it and clear it
+add descriptions for extra marks, 
 remember to remove ready serial print as it may not be effective
 
 references
