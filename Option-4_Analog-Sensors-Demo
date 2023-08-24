@@ -12,8 +12,6 @@ const String commandDescriptions[sizeof(commands) / sizeof(String)] = { "Display
 #define Temp 13
 // This defines the variable "Potentiometer" as 15, D15, or pin 15, and can be referenced later so you don't have to remember which pin the potentiometer is attached to. 
 #define Potentiometer 15
-// This defines the variable "Button" as 23, D23, or pin 23, and can be referenced later so you don't have to remember which pin the button is attached to. 
-#define Button 23
 
 // Keeps track of the total analog input over 10000 times the loop function runs to display an average. 
 int total;
@@ -43,8 +41,6 @@ void setup() {
   pinMode(Temp, INPUT_PULLUP);
   // This references the previously set variable and tells the board that pin 15 is an input and should be treated as such. 
   pinMode(Potentiometer, INPUT_PULLUP);
-  // This references the previously set variable and tells the board that pin 23 is an input and should be treated as such. 
-  pinMode(Button, INPUT_PULLUP);
 }
 
 // This function runs repeatedly on a loop until the board is powered down so put the code you want to run continuously here.
