@@ -3,5 +3,5 @@
 <ol>
   <li>Install the appropriate Arduino IDE version for your device at https://www.arduino.cc/en/software. </li>
   <li href="#">Copy the code from HERE into the Arduino IDE. </li>
-  <li>Then read through the comments and extended breakdown [HERE](Option-6_WiFi-Toutorial/Option-6-part-1-Code-Breakdown_Connect-To-Router-Demo).</li>
+  <li>Then read through the comments and extended breakdown [HERE](Option-6_WiFi-Toutorial/Option-6-part-1_Connect-To-Router-Demo).</li>
 </ol>
