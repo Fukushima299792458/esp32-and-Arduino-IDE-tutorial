@@ -13,4 +13,14 @@ SSID stands for Service Set IDentifier, this is the display name for your WiFi n
 # 3. `WIFI_AP_STA` makes the esp32 both an Access Point and a WiFi station, which means it will act as a router/AP(Access Point)/WiFi network/WLAN without internet. As an access point and a WiFi station, the esp can use all of the WiFi functions.
 
 ## `WiFi.begin()`
-`WiFi.begin()` activates the esp32 as a WiFi station and trys to connect to a WiFi network. The `WiFi.begin()` function takes two arguments so set the network name, or as in the example code, `ssid`, and the network password, in the code as password or `WiFi.begin(ssid, password);`. 
+`WiFi.begin()` tells the WiFi station to try to connect to a WiFi network. The `WiFi.begin()` function takes two arguments to set the network name, or as in the example code, `ssid`, and the network password, in the code as password or `WiFi.begin(ssid, password);`. 
+  - Can take one argument if the network doesn't have a password as just `WiFi.begin(ssid);`. 
+  - Can also take three arguments of `WiFi.begin(ssid, keyIndex, keys);` which uses a key in the keys array based on the keyindex and is used for WPA encrypted networks but is outside the scope of this tutorial.
+
+## `WiFi.localIP()`
+`WiFi.localIP()` returns the local IP address of the WiFi station on the WiFi network it is connected to. 
+
+## `WiFi.softAP()`
+`WiFi.softAP()` tells the esp32 to start broadcasting as a WiFi network or access point. The `WiFi.softAP()` function takes two arguments to set the network name, or as in the example code, `ssid`, and the network password, in the code as password or `WiFi.softAP(ssid, password);`. 
+  - Can take one argument if you don't want the network to have a password, as just `WiFi.softAP(ssid);`. 
+  - Can also take three arguments of `WiFi.begin(ssid, keyIndex, keys);` which uses a key in the keys array based on the keyindex and is used for WPA encrypted networks but is outside the scope of this tutorial. 
