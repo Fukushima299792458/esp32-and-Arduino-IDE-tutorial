@@ -4,7 +4,7 @@
 
 2. Copy the code from [HERE](https://github.com/Fukushima299792458/Things-and-stuff/blob/8421117198cfa2a33709255158edd3b28bd47a91/Option-6_WiFi-Toutorial/Option-6-part-1_Connect-To-Router-Demo) into the Arduino IDE. 
 
-3. Then, if you want, read through the comments and extended breakdown [HERE](https://github.com/Fukushima299792458/Things-and-stuff/blob/b7788d807ecc0c25440f35963ac83e259cabdddb/Option-6_WiFi-Toutorial/Option-6-part-1-Code-Breakdown_Connect-To-Router-Demo) for a more in-depth understanding of each of the key functions.
+3. Then, if you want, read through the comments and extended breakdown [HERE](https://github.com/Fukushima299792458/Things-and-stuff/blob/b7788d807ecc0c25440f35963ac83e259cabdddb/Option-6_WiFi-Toutorial/Option-6-part-1-Code-Breakdown_Connect-To-Router-Demo) for a more in-depth understanding of each of the key WiFi functions.
 
 4. Replace `NetworkName` on line 5 of the code - `const char* ssid = "NetworkName";` - with the name of the network you want to connect to and replace `NetworkPassword` on line 7 of the code - `const char* password = "NetworkPassword";` - with the password of the network you want to connect to.
 
