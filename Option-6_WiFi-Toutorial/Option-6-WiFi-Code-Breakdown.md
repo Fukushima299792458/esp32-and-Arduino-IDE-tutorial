@@ -1,7 +1,11 @@
 # WiFi key Functions Breakdown
 
 ## SSID
-
+SSID stands for Service Set IDentifier
 
 ## `WiFi.mode()`
-`WIFI_STA` sets the esp32 to a WiFi station which means it will be able to connect to a router/AP(Access Point, see second possible mode)/WiFi network. While in station mode, the `WiFi.begin()` and `WiFi.localIP()` (see the `WiFi.begin()` and `WiFi.localIP()` sections respectively).
+`WiFi.mode()` sets the way the the esp32 should
+
+1. `WIFI_STA` sets the esp32 to a WiFi station which means it will be able to connect to a router/AP(Access Point, see second possible mode)/WiFi network. While in station mode, the `WiFi.begin()` and `WiFi.localIP()` (see the `WiFi.begin()` and `WiFi.localIP()` sections respectively).
+
+2. 
