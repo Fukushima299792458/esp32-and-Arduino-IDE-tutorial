@@ -2,9 +2,9 @@
 #include <WiFi.h>
 
 // Set network name.
-const char* ssid = "NetworkName";
+const char* ssid = "Phoenix’s iPhone";
 // Set network password. 
-const char* password = "NetworkPassword";
+const char* password = "nononono";
 
 
 // Self-explanatory, this is the code you want to run when setting up before the first "frame" or "loop()" function runs.
@@ -24,22 +24,21 @@ void setup() {
   WiFi.begin(ssid, password);
   // Announce connection status. 
   Serial.print("Connecting to WiFi..");
-  // Keep track of how long it has been checking the WiFi network for. 
-  int timeout_counter = 0;
   // Repeat until connected to WiFi. 
   while (WiFi.status() != WL_CONNECTED) {
-    // Add some delay so the processor isn't overloaded. 
-    delay(100);
-    if (timeout_counter >= 60){ 
-      // Print a dot every second to confirm the esp is checking for the network.  
-      Serial.print(".");
+    // Add some delay so the processor isn't exessively overloaded. 
+    delay(1000);
+    // Print a dot every second to confirm the esp is checking for the network.  
+    Serial.print(".");
+    // If the network cannot be connected to then try again. 
+    if (WiFi.status() == WL_CONNECT_FAILED) { 
+      // Attempt to join the network again. 
+      WiFi.begin(ssid, password);
+      // Move to the next line.
+      Serial.println();
+      // Announce that the esp32 couldn't connect and is going to try to connect again.
+      Serial.println("Failed, trying again..");
     }
-    // If the network cannot be found then restart the esp. 
-    if (timeout_counter >= 600){ 
-      ESP.restart();
-    }
-    // Increase how long the esp has been checking for the network. 
-    timeout_counter++;
   }
 
   // Each Serial.println(); adds a return element after the text so this line puts the next text on a new line. 
@@ -51,5 +50,29 @@ void setup() {
 
 // This function runs repeatedly on a loop until the board is powered down so put the code you want to run continuously here.
 void loop() {
-  // Do nothing, just for demonstration purposes. 
+  // If the network connection is lost then try to reconnect. 
+  if (WiFi.status() == 	WL_CONNECTION_LOST) { 
+    // Attempt to join the network again. 
+    WiFi.begin(ssid, password);
+    // Move to the next line.
+    Serial.println();
+    // Announce that the esp32 lost the connection and is going to try to connect again.
+    Serial.println("Connection failed, reconnect..");
+    // Repeat until connected to WiFi. 
+    while (WiFi.status() != WL_CONNECTED) {
+      // Add some delay so the processor isn't exessively overloaded. 
+      delay(1000);
+      // Print a dot every second to confirm the esp is checking for the network.  
+      Serial.print(".");
+      // If the network cannot be connected to then try again. 
+      if (WiFi.status() == WL_CONNECT_FAILED) { 
+        // Attempt to join the network again. 
+        WiFi.begin(ssid, password);
+        // Move to the next line.
+        Serial.println();
+        // Announce that the esp32 couldn't connect and is going to try to connect again.
+        Serial.println("Failed, trying again..");
+      }
+    }
+  }
 }
