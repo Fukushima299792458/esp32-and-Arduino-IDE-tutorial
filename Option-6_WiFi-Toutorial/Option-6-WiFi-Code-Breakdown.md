@@ -22,7 +22,7 @@ SSID stands for Service Set IDentifier, this is the display name for your WiFi n
 
 ### `WiFi.softAP()`
 `WiFi.softAP()` tells the esp32 to start broadcasting as a WiFi network or access point. The `WiFi.softAP()` function takes two arguments to set the network name, or as in the example code, `ssid`, and the network password, in the code as password or `WiFi.softAP(ssid, password);`. 
-  - Can take one argument if you don't want the network to have a password, as just `WiFi.softAP(ssid);`. 
+  - Can take one argument if you don't want the network to have a password, as just `WiFi.softAP(ssid);` or it can take a null `""` as a placeholder for the password. 
   - Can also take five arguments of `WiFi.begin(ssid, password, channel, hiddenSSID, maxConnections);` which uses forces the WiFi `channel` or sub bandwidth you want (from 1-13), makes the network a visible network or hidden network (0-1 respectively), and `maxConnections` dictates how many people can join the network at once (1-10 but 1-4 is recommended depending on specific board specifications).
 
 ### `WiFi.softAPIP()`
