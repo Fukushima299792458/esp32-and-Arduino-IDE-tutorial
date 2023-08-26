@@ -20,7 +20,7 @@ void setup() {
   // Set the WiFi mode to access point mode i.e. allows it to become a router. 
   WiFi.mode(WIFI_AP);
   // Create the network. 
-  WiFi.softAP(ssidAP, null, 1, 1, 4);
+  WiFi.softAP(ssidAP, "", 1, 1, 4);
   Serial.println(WiFi.softAPIP());
 
 }
