@@ -10,7 +10,7 @@ SSID stands for Service Set IDentifier, this is the display name for your WiFi n
 
 2. `WIFI_AP` makes the esp32 an Access Point, which means it will act as a router/AP(Access Point)/WiFi network/WLAN without internet. As an access point, the `WiFi.softAP()` and `WiFi.sofAPIP()` functiions are available (see the `WiFi.softAP()` and `WiFi.softAPIP()` sections respectively).
 
-# 3. `WIFI_AP_STA` makes the esp32 both an Access Point and a WiFi station, which means it will act as a router/AP(Access Point)/WiFi network/WLAN without internet. As an access point and a WiFi station, the esp can use all of the WiFi functions.
+3. `WIFI_AP_STA` makes the esp32 both an Access Point and a WiFi station, which means it will act as a router/AP(Access Point)/WiFi network/WLAN without internet. As an access point and a WiFi station, the esp can use all of the WiFi functions.
 
 ### `WiFi.begin()`
 `WiFi.begin()` tells the WiFi station to try to connect to a WiFi network. The `WiFi.begin()` function takes two arguments to set the network name, or as in the example code, `ssid`, and the network password, in the code as password or `WiFi.begin(ssid, password);`. 
